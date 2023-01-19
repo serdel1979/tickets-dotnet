@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace tickets
 {
@@ -15,9 +16,11 @@ namespace tickets
 
 
         public void ConfigureServices(IServiceCollection services)
-        { 
+        {
+
+            services.AddDbContext<ApplicationDbContext>(options=>
+                options.UseSqlServer(Configuration.GetConnectionString("DefoultConnection")));
             services.AddControllers();
-            services.AddEndpointsApiExplorer();        
         }
 
             public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
