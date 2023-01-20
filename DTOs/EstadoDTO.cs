@@ -11,7 +11,7 @@ namespace tickets.DTOs
         [Required]
         [StringLength(250)]
         public string Comentario { get; set; }
-        public int IdSolicitud { get; set; }
+        public int SolicitudId { get; set; }
         public DateTime Fecha { get; set; }
     }
 }

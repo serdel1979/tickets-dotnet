@@ -12,6 +12,9 @@ namespace tickets.DTOs
         [StringLength(50)]
         public string Usuario { get; set; }
         [Required]
+        [StringLength(50)]
+        public string Departamento { get; set; }
+        [Required]
         [StringLength(250)]
         public string Descripcion { get; set; }
         [Required]

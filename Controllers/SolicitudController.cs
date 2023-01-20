@@ -34,9 +34,20 @@ namespace tickets.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] NuevaSolicitudDTO nuevaSolicitud)
         {
-            nuevaSolicitud.EstadoActual = "PENDIENTE";
             var entidadSolicitud = mapper.Map<Solicitud>(nuevaSolicitud);
+            entidadSolicitud.EstadoActual = "PENDIENTE";
             context.Add(entidadSolicitud);
+            await context.SaveChangesAsync();
+            //Guarda el primer estado
+            var estado = new NuevoEstadoDTO
+            {
+                EstadoActual = "PENDIENTE",
+                Comentario = "Nada por ahora...",
+                SolicitudId = entidadSolicitud.Id,
+                Fecha = DateTime.Now
+            };
+            var entidadEstado = mapper.Map<Estado>(estado);
+            context.Add(entidadEstado);
             await context.SaveChangesAsync();
             var solicitudDto = mapper.Map<SolicitudDTO>(entidadSolicitud);
             return Ok(solicitudDto);
