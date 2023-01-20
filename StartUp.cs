@@ -21,9 +21,10 @@ namespace tickets
             services.AddDbContext<ApplicationDbContext>(options=>
                 options.UseSqlServer(Configuration.GetConnectionString("DefoultConnection")));
             services.AddControllers();
+            services.AddAutoMapper(typeof(StartUp));
         }
 
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
