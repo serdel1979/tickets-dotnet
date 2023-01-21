@@ -74,6 +74,7 @@ namespace tickets.Controllers
                     SolicitudId = id,
                     Fecha = DateTime.Now
                 };
+                entidadSolicitud.EstadoActual = "Visto";
                 var entidadEstado = mapper.Map<Estado>(estado);
                 context.Add(entidadEstado);
                 await context.SaveChangesAsync();
@@ -82,6 +83,25 @@ namespace tickets.Controllers
             return Ok(dto);
         }
 
+
+
+
+
+        //retorna los estados de una solicitud
+
+        [HttpGet("{idSolicitud:int}/estados", Name = "ObtenerEstadosDeSolicitud")]
+        public async Task<ActionResult<List<EstadoDTO>>> GetEstadosSolicitud(int idSolicitud)
+        {
+            var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == idSolicitud).
+                                OrderByDescending(estado => estado.Fecha).
+                                ToListAsync();
+            if (entidadesEstado == null)
+            {
+                return NotFound();
+            }
+            var dtos = mapper.Map<List<EstadoDTO>>(entidadesEstado);
+            return Ok(dtos);
+        }
 
     }
 }
