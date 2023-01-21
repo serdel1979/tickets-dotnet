@@ -48,6 +48,18 @@ namespace tickets.Controllers
         }
 
 
+        [HttpGet("{idSolicitud:int}", Name = "ObtenerEstadosDeSolicitud")]
+        public async Task<ActionResult<List<EstadoDTO>>> GetEstadosSolicitud(int idSolicitud)
+        {
+            var entidadesEstado = await context.Estados.FirstOrDefaultAsync(estado => estado.SolicitudId  == idSolicitud);
+            if (entidadesEstado == null)
+            {
+                return NotFound();
+            }
+            var dtos = mapper.Map<List<EstadoDTO>>(entidadesEstado);
+            return Ok(dtos);
+        }
+
 
 
         [HttpPost]
