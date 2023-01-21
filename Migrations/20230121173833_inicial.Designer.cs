@@ -12,8 +12,8 @@ using tickets;
 namespace tickets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230120040713_nueva")]
-    partial class nueva
+    [Migration("20230121173833_inicial")]
+    partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,11 @@ namespace tickets.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Departamento")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
