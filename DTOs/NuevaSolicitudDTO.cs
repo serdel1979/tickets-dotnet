@@ -19,6 +19,8 @@ namespace tickets.DTOs
         [Required]
         [StringLength(250)]
         public string Equipo { get; set; }
+        [Required]
+        public DateTime Fecha { get; set; }
 
     }
 }

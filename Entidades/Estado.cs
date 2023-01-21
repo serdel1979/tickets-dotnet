@@ -11,7 +11,9 @@ namespace tickets.Entidades
         [Required]
         [StringLength(250)]
         public string Comentario { get; set; }
+        [Required]
         public int SolicitudId { get; set;}
+        [Required]
         public DateTime Fecha { get; set;}
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using tickets.DTOs;
 using tickets.Entidades;
 
@@ -36,6 +37,7 @@ namespace tickets.Controllers
         {
             var entidadSolicitud = mapper.Map<Solicitud>(nuevaSolicitud);
             entidadSolicitud.EstadoActual = "PENDIENTE";
+            entidadSolicitud.Fecha = DateTime.Now;
             context.Add(entidadSolicitud);
             await context.SaveChangesAsync();
             //Guarda el primer estado
@@ -51,6 +53,33 @@ namespace tickets.Controllers
             await context.SaveChangesAsync();
             var solicitudDto = mapper.Map<SolicitudDTO>(entidadSolicitud);
             return Ok(solicitudDto);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<EstadoDTO>> GetSolicitud(int id)
+        {
+            var entidadSolicitud = await context.Solicitudes.FirstOrDefaultAsync(solicitud => solicitud.Id == id);
+            if (entidadSolicitud == null)
+            {
+                return NotFound();
+            }
+            //busco los estados de la solicitud para marcarla como vista si es que no lo está
+            var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == id).
+                ToListAsync();
+            if (entidadesEstado.Count == 1) {    //si solo tiene un estado, es el pendiente
+                var estado = new NuevoEstadoDTO
+                {
+                    EstadoActual = "Visto",
+                    Comentario = "Nada por ahora...",
+                    SolicitudId = id,
+                    Fecha = DateTime.Now
+                };
+                var entidadEstado = mapper.Map<Estado>(estado);
+                context.Add(entidadEstado);
+                await context.SaveChangesAsync();
+            }
+            var dto = mapper.Map<SolicitudDTO>(entidadSolicitud);
+            return Ok(dto);
         }
 
 

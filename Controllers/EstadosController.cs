@@ -48,10 +48,12 @@ namespace tickets.Controllers
         }
 
 
-        [HttpGet("{idSolicitud:int}", Name = "ObtenerEstadosDeSolicitud")]
+        [HttpGet("{idSolicitud:int}/estados", Name = "ObtenerEstadosDeSolicitud")]
         public async Task<ActionResult<List<EstadoDTO>>> GetEstadosSolicitud(int idSolicitud)
         {
-            var entidadesEstado = await context.Estados.FirstOrDefaultAsync(estado => estado.SolicitudId  == idSolicitud);
+            var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == idSolicitud).
+                                OrderByDescending(estado => estado.Fecha).
+                                ToListAsync();
             if (entidadesEstado == null)
             {
                 return NotFound();

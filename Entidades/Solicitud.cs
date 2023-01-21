@@ -22,6 +22,8 @@ namespace tickets.Entidades
         [Required]
         [StringLength(50)]
         public string EstadoActual { get; set; }
+        [Required]
+        public DateTime Fecha { get; set; }
         public List<Estado> Estados { get; set; }
     }
 }

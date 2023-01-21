@@ -23,5 +23,7 @@ namespace tickets.DTOs
         [Required]
         [StringLength(50)]
         public string EstadoActual { get; set; }
+        [Required]
+        public DateTime Fecha { get; set; }
     }
 }
