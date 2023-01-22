@@ -66,7 +66,7 @@ namespace tickets.Controllers
             //busco los estados de la solicitud para marcarla como vista si es que no lo está
             var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == id).
                 ToListAsync();
-            if (entidadesEstado.Count == 1) {    //si solo tiene un estado, es el pendiente
+            if (entidadesEstado.Count == 1) {    //si solo tiene un estado, es el pendiente y es un admin
                 var estado = new NuevoEstadoDTO
                 {
                     EstadoActual = "Visto",
@@ -79,8 +79,9 @@ namespace tickets.Controllers
                 context.Add(entidadEstado);
                 await context.SaveChangesAsync();
             }
-            var dto = mapper.Map<SolicitudDTO>(entidadSolicitud);
-            return Ok(dto);
+            await context.SaveChangesAsync();
+            var solicitudDto = mapper.Map<SolicitudDTO>(entidadSolicitud);
+            return Ok(solicitudDto);
         }
 
 

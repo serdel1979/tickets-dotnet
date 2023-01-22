@@ -52,17 +52,25 @@ namespace tickets.Controllers
 
 
 
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] NuevoEstadoDTO nuevoEstadoDto)
+        [HttpPost("{id:int}/nuevo")]
+        public async Task<ActionResult> Post([FromBody] NuevoEstadoDTO nuevoEstadoDto, int Id)
         {
-            nuevoEstadoDto.Fecha = DateTime.Now;
-            nuevoEstadoDto.EstadoActual = "Pendiente";
-            var entidadEstado = mapper.Map<Estado>(nuevoEstadoDto);
-            context.Add(entidadEstado);
-            await context.SaveChangesAsync();
-            var estadoDto = mapper.Map<EstadoDTO>(entidadEstado);
 
-            return new CreatedAtRouteResult("ObtenerEstado", new { id = estadoDto.Id }, estadoDto);
+            var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == Id).
+                                OrderByDescending(estado => estado.Fecha).
+                                ToListAsync();
+            var ultimo = entidadesEstado.OrderByDescending(x => x.Fecha).FirstOrDefault();
+
+
+            //nuevoEstadoDto.Fecha = DateTime.Now;
+            //nuevoEstadoDto.EstadoActual = "Pendiente";
+            //var entidadEstado = mapper.Map<Estado>(nuevoEstadoDto);
+            //context.Add(entidadEstado);
+            //await context.SaveChangesAsync();
+            //var estadoDto = mapper.Map<EstadoDTO>(entidadEstado);
+
+            //return new CreatedAtRouteResult("ObtenerEstado", new { id = estadoDto.Id }, estadoDto);
+            return Ok();
         }
 
         [HttpDelete("{id:int}")]
