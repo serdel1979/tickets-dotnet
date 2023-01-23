@@ -68,7 +68,7 @@ namespace tickets.Controllers
             estadoDTO.EstadoActual = estadoBd.EstadoActual;
             estadoDTO.Fecha = DateTime.Now;
             estadoDTO.SolicitudId = estadoBd.SolicitudId;
-
+            estadoDTO.Id = estadoBd.Id;
             estadoBd = mapper.Map(estadoDTO, estadoBd);
             var estadoBD = mapper.Map<Estado>(estadoDTO);
 
@@ -83,21 +83,26 @@ namespace tickets.Controllers
         public async Task<ActionResult> Post([FromBody] NuevoEstadoDTO nuevoEstadoDto, int idSolicitud)
         {
 
+            nuevoEstadoDto.Fecha = DateTime.Now;
+            nuevoEstadoDto.SolicitudId = idSolicitud;
             var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == idSolicitud).
                                 OrderByDescending(estado => estado.Fecha).
                                 ToListAsync();
             var ultimo = entidadesEstado.OrderByDescending(x => x.Fecha).FirstOrDefault();
 
+            if(ultimo.EstadoActual == "CERRADO" || ultimo.EstadoActual == "SOLUCIONADO")
+            {
+                return Unauthorized();
+            }
+            var entidadEstado = mapper.Map<Estado>(nuevoEstadoDto);
+            context.Add(entidadEstado);
+            await context.SaveChangesAsync();
+            var estadoDto = mapper.Map<EstadoDTO>(entidadEstado);
 
-            //nuevoEstadoDto.Fecha = DateTime.Now;
-            //nuevoEstadoDto.EstadoActual = "Pendiente";
-            //var entidadEstado = mapper.Map<Estado>(nuevoEstadoDto);
-            //context.Add(entidadEstado);
-            //await context.SaveChangesAsync();
-            //var estadoDto = mapper.Map<EstadoDTO>(entidadEstado);
-
-            //return new CreatedAtRouteResult("ObtenerEstado", new { id = estadoDto.Id }, estadoDto);
-            return Ok();
+            var solicitudBd = await context.Solicitudes.FirstOrDefaultAsync(x => x.Id == idSolicitud);
+            solicitudBd.EstadoActual = nuevoEstadoDto.EstadoActual;
+            await context.SaveChangesAsync();
+            return Ok(estadoDto);
         }
 
         [HttpDelete("{id:int}")]
