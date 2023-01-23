@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -12,6 +14,7 @@ namespace tickets.Controllers
 {
     [ApiController]
     [Route("api/usuarios")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsuariosController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -68,11 +71,13 @@ namespace tickets.Controllers
 
         private async Task<RespuestaAutenticacion> construirToken(CredencialesUsuario credencialUsuario)
         {
-            var claims = new List<Claim>(){
-                new Claim("usuario", credencialUsuario.Usuario)
-            };
+
 
             var usuario = await userManager.FindByNameAsync(credencialUsuario.Usuario);
+
+            var claims = new List<Claim>(){
+                new Claim("usuario", usuario.Id)
+            };
 
             var claimsDB = await userManager.GetClaimsAsync(usuario);
 

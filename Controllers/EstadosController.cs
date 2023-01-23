@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -9,6 +11,7 @@ namespace tickets.Controllers
 {
     [ApiController]
     [Route("api/solicitudes/estados")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EstadosController: ControllerBase
     {
         private readonly ApplicationDbContext context;
