@@ -63,10 +63,13 @@ namespace tickets.Controllers
             {
                 return NotFound();
             }
-            //busco los estados de la solicitud para marcarla como vista si es que no lo está
+
             var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == id).
-                ToListAsync();
-            if (entidadesEstado.Count == 1) {    //si solo tiene un estado, es el pendiente y es un admin
+                    OrderByDescending(estado => estado.Fecha).
+                    ToListAsync();
+
+            if (entidadesEstado.Count == 1)
+            {    //si solo tiene un estado, es el pendiente y es un admin
                 var estado = new NuevoEstadoDTO
                 {
                     EstadoActual = "Visto",
@@ -78,14 +81,17 @@ namespace tickets.Controllers
                 var entidadEstado = mapper.Map<Estado>(estado);
                 context.Add(entidadEstado);
                 await context.SaveChangesAsync();
-            }
+            };
+
+
+
             await context.SaveChangesAsync();
             var solicitudDto = mapper.Map<SolicitudDTO>(entidadSolicitud);
             return Ok(solicitudDto);
         }
 
 
-
+        
 
 
         //retorna los estados de una solicitud
@@ -93,9 +99,35 @@ namespace tickets.Controllers
         [HttpGet("{idSolicitud:int}/estados", Name = "ObtenerEstadosDeSolicitud")]
         public async Task<ActionResult<List<EstadoDTO>>> GetEstadosSolicitud(int idSolicitud)
         {
+            var entidadSolicitud = await context.Solicitudes.FirstOrDefaultAsync(solicitud => solicitud.Id == idSolicitud);
+            if (entidadSolicitud == null)
+            {
+                return NotFound();
+            }
+
             var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == idSolicitud).
-                                OrderByDescending(estado => estado.Fecha).
-                                ToListAsync();
+                    OrderByDescending(estado => estado.Fecha).
+                    ToListAsync();
+
+            if (entidadesEstado.Count == 1)
+            {    //si solo tiene un estado, es el pendiente y es un admin
+                var estado = new NuevoEstadoDTO
+                {
+                    EstadoActual = "Visto",
+                    Comentario = "Nada por ahora...",
+                    SolicitudId = idSolicitud,
+                    Fecha = DateTime.Now
+                };
+                entidadSolicitud.EstadoActual = "Visto";
+                var entidadEstado = mapper.Map<Estado>(estado);
+                context.Add(entidadEstado);
+                await context.SaveChangesAsync();
+            };
+
+            entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == idSolicitud).
+                    OrderByDescending(estado => estado.Fecha).
+                    ToListAsync();
+
             if (entidadesEstado == null)
             {
                 return NotFound();
@@ -104,5 +136,8 @@ namespace tickets.Controllers
             return Ok(dtos);
         }
 
+
+
+ 
     }
 }

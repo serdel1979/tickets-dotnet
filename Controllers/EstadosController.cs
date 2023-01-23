@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using tickets.DTOs;
 using tickets.Entidades;
 
@@ -92,7 +93,11 @@ namespace tickets.Controllers
 
             if(ultimo.EstadoActual == "CERRADO" || ultimo.EstadoActual == "SOLUCIONADO")
             {
-                return Unauthorized();
+                return StatusCode(405);
+            }
+            if (ultimo.EstadoActual == "VISTO" || nuevoEstadoDto.EstadoActual == "PENDIENTE")
+            {
+                return StatusCode(405);
             }
             var entidadEstado = mapper.Map<Estado>(nuevoEstadoDto);
             context.Add(entidadEstado);
@@ -103,21 +108,6 @@ namespace tickets.Controllers
             solicitudBd.EstadoActual = nuevoEstadoDto.EstadoActual;
             await context.SaveChangesAsync();
             return Ok(estadoDto);
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-
-            var existe = await context.Estados.AnyAsync(x => x.Id == id);
-            if (!existe)
-            {
-                return NotFound();
-            }
-
-            context.Remove(new Estado() { Id = id });
-            await context.SaveChangesAsync();
-            return Ok();
         }
 
     }
