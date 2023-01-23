@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -9,6 +11,7 @@ namespace tickets.Controllers
 {
     [ApiController]
     [Route("api/solicitudes")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SolicitudController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -24,6 +27,7 @@ namespace tickets.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy ="EsAdmin")]
         public async Task<ActionResult<List<SolicitudDTO>>> GetSolicitudes()
         {
             var entidadesSolicitud = await context.Solicitudes.ToListAsync();

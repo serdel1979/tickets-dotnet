@@ -26,6 +26,7 @@ namespace tickets.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult<List<EstadoDTO>>> GetEstados()
         {
             var entidadesEstado = await context.Estados.ToListAsync();
@@ -54,6 +55,7 @@ namespace tickets.Controllers
 
 
         [HttpPut("{idEstado:int}")]
+        [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult> Put(EstadoDTO estadoDTO, int idEstado)
         {
 
@@ -84,6 +86,7 @@ namespace tickets.Controllers
 
 
         [HttpPost("{idSolicitud:int}/nuevo")]
+        [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult> Post([FromBody] NuevoEstadoDTO nuevoEstadoDto, int idSolicitud)
         {
 

@@ -47,6 +47,7 @@ namespace tickets
             services.AddAuthorization(opciones =>
             {
                 opciones.AddPolicy("EsAdmin", politica => politica.RequireClaim("esAdmin"));
+               // opciones.AddPolicy("EsSuId", politica => politica.RequireClaim("esSuId"));
             });
 
         }

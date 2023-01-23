@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using tickets.DTOs;
 using tickets.Entidades;
 
@@ -12,6 +14,7 @@ namespace tickets.Helpers
             CreateMap<NuevoEstadoDTO, Estado>();
             CreateMap<Solicitud, SolicitudDTO>().ReverseMap();
             CreateMap<NuevaSolicitudDTO, Solicitud>();
+            CreateMap<IdentityUser, UsuarioDTO>();
 
         }
     }
