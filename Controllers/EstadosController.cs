@@ -48,15 +48,42 @@ namespace tickets.Controllers
         }
 
 
-       
 
-
-
-        [HttpPost("{id:int}/nuevo")]
-        public async Task<ActionResult> Post([FromBody] NuevoEstadoDTO nuevoEstadoDto, int Id)
+        [HttpPut("{idEstado:int}")]
+        public async Task<ActionResult> Put(EstadoDTO estadoDTO, int idEstado)
         {
 
-            var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == Id).
+
+            var estadoBd = await context.Estados.FirstOrDefaultAsync(x => x.Id == idEstado);
+            if (estadoBd == null)
+            {
+                return NotFound();
+            }
+
+            if(estadoBd.EstadoActual == "CERRADO" || estadoBd.EstadoActual == "SOLUCIONADO")
+            {
+                return Unauthorized();
+            }
+
+            estadoDTO.EstadoActual = estadoBd.EstadoActual;
+            estadoDTO.Fecha = DateTime.Now;
+            estadoDTO.SolicitudId = estadoBd.SolicitudId;
+
+            estadoBd = mapper.Map(estadoDTO, estadoBd);
+            var estadoBD = mapper.Map<Estado>(estadoDTO);
+
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+
+
+        [HttpPost("{idSolicitud:int}/nuevo")]
+        public async Task<ActionResult> Post([FromBody] NuevoEstadoDTO nuevoEstadoDto, int idSolicitud)
+        {
+
+            var entidadesEstado = await context.Estados.Where(estado => estado.SolicitudId == idSolicitud).
                                 OrderByDescending(estado => estado.Fecha).
                                 ToListAsync();
             var ultimo = entidadesEstado.OrderByDescending(x => x.Fecha).FirstOrDefault();

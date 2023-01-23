@@ -12,6 +12,7 @@ namespace tickets.Helpers
             CreateMap<NuevoEstadoDTO, Estado>();
             CreateMap<Solicitud, SolicitudDTO>().ReverseMap();
             CreateMap<NuevaSolicitudDTO, Solicitud>();
+
         }
     }
 }
