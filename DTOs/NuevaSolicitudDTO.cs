@@ -6,7 +6,8 @@ namespace tickets.DTOs
     public class NuevaSolicitudDTO
     {
         [Required]
-        public int UsuarioId { get; set; }
+        [StringLength(450)]
+        public string UsuarioId { get; set; }
         [Required]
         [StringLength(50)]
         public string Usuario { get; set; }

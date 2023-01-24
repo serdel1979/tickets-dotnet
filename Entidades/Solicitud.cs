@@ -6,7 +6,8 @@ namespace tickets.Entidades
     {
         public int Id { get; set; }
         [Required]
-        public int UsuarioId { get; set; }
+        [StringLength(450)]
+        public string UsuarioId { get; set; }
         [Required]
         [StringLength(50)]
         public string Usuario { get; set; }

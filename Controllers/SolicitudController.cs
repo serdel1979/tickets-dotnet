@@ -35,6 +35,15 @@ namespace tickets.Controllers
             return dtos;
         }
 
+        [HttpGet("{idUser}/missolicitudes")]
+        public async Task<ActionResult<List<SolicitudDTO>>> GetMiSolicitudes(string idUser)
+        {
+            var entidadesSolicitud = await context.Solicitudes.Where(x => x.UsuarioId == idUser).
+                    OrderByDescending(estado => estado.Fecha).
+                    ToListAsync();
+            var dtos = mapper.Map<List<SolicitudDTO>>(entidadesSolicitud);
+            return dtos;
+        }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] NuevaSolicitudDTO nuevaSolicitud)
