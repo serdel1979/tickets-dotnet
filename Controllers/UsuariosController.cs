@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using tickets.DTOs;
+using tickets.Utilidades;
 
 namespace tickets.Controllers
 {
@@ -80,10 +82,11 @@ namespace tickets.Controllers
 
         [HttpGet]
         [Authorize(Policy = "EsAdmin")]
-        public async Task<ActionResult<List<UsuarioDTO>>> GetUsuarios()
+        public async Task<ActionResult<List<UsuarioDTO>>> GetUsuarios([FromQuery] PaginacionDTO paginacion)
         {
-
-            var entidadesUsuarios = await context.Users.ToListAsync();
+            var queryable = context.Solicitudes.AsQueryable();
+            //var entidadesUsuarios = await context.Users.ToListAsync();
+            var entidadesUsuarios = await queryable.OrderBy(x => x.Usuario).Paginar(paginacion).ToListAsync();
             var usuariosDTO = mapper.Map<List<UsuarioDTO>>(entidadesUsuarios);
 
             return Ok(usuariosDTO);
