@@ -50,6 +50,16 @@ namespace tickets
                // opciones.AddPolicy("EsSuId", politica => politica.RequireClaim("esSuId"));
             });
 
+            services.AddCors(opciones =>
+            {
+                opciones.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
+                    .WithExposedHeaders(new string[] { "total" });
+
+                });
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using tickets.DTOs;
 using tickets.Entidades;
+using tickets.Utilidades;
 
 namespace tickets.Controllers
 {
@@ -28,11 +29,13 @@ namespace tickets.Controllers
 
         [HttpGet]
         [Authorize(Policy ="EsAdmin")]
-        public async Task<ActionResult<List<SolicitudDTO>>> GetSolicitudes()
+        public async Task<ActionResult<List<SolicitudDTO>>> GetSolicitudes([FromQuery] PaginacionDTO paginacion)
         {
-            var entidadesSolicitud = await context.Solicitudes.ToListAsync();
-            var dtos = mapper.Map<List<SolicitudDTO>>(entidadesSolicitud);
-            return dtos;
+            var queryable = context.Solicitudes.AsQueryable();
+            await HttpContext.InsertaPaginacionEnCabecera(queryable);
+            var entidadesSolicitud = await queryable.OrderByDescending(sol => sol.Fecha).Paginar(paginacion).
+                    ToListAsync();
+            return mapper.Map<List<SolicitudDTO>>(entidadesSolicitud);
         }
 
         [HttpGet("{idUser}/missolicitudes")]
@@ -41,8 +44,7 @@ namespace tickets.Controllers
             var entidadesSolicitud = await context.Solicitudes.Where(x => x.UsuarioId == idUser).
                     OrderByDescending(estado => estado.Fecha).
                     ToListAsync();
-            var dtos = mapper.Map<List<SolicitudDTO>>(entidadesSolicitud);
-            return dtos;
+            return mapper.Map<List<SolicitudDTO>>(entidadesSolicitud);
         }
 
         [HttpPost]
