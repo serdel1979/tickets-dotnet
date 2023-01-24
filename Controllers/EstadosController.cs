@@ -68,7 +68,7 @@ namespace tickets.Controllers
 
             if(estadoBd.EstadoActual == "CERRADO" || estadoBd.EstadoActual == "SOLUCIONADO")
             {
-                return Unauthorized();
+                return StatusCode(405);
             }
 
             estadoDTO.EstadoActual = estadoBd.EstadoActual;
@@ -101,7 +101,7 @@ namespace tickets.Controllers
             {
                 return StatusCode(405);
             }
-            if (ultimo.EstadoActual == "VISTO" || nuevoEstadoDto.EstadoActual == "PENDIENTE")
+            if (ultimo.EstadoActual == "VISTO" && nuevoEstadoDto.EstadoActual == "PENDIENTE")
             {
                 return StatusCode(405);
             }
