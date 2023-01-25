@@ -46,7 +46,7 @@ namespace tickets.Controllers
             var entidadEquipo = await context.Equipos.FirstOrDefaultAsync(eq => (eq.Inventario == equipoDto.Inventario));
             if (entidadEquipo != null)
             {
-                return StatusCode(405,$"Ya existe el inventario {equipoDto.Inventario}");
+                return StatusCode(400,$"Ya existe el inventario {equipoDto.Inventario}");
             }
             var entidadEq = mapper.Map<Equipo>(equipoDto);
             context.Add(entidadEq);
@@ -55,6 +55,47 @@ namespace tickets.Controllers
             return Ok(eqDto);
         }
 
+        [HttpPut("{Id:int}")]
+        [Authorize(Policy = "EsAdmin")]
+        public async Task<ActionResult> Put(EquipoDTO equipoDto, int Id)
+        {
+
+            var existe = await context.Equipos.AnyAsync(x => x.Id == Id);
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            var equipoBD = await context.Equipos.FirstOrDefaultAsync(eq => (eq.Inventario == equipoDto.Inventario));
+            if (equipoBD != null)
+            {
+                return StatusCode(400, $"Ya existe el inventario {equipoDto.Inventario}");
+            }
+
+            equipoBD = mapper.Map<Equipo>(equipoDto);
+            equipoBD.Id = Id;
+
+            context.Update(equipoBD);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Policy = "EsAdmin")]
+        public async Task<ActionResult> Delete(int id)
+        {
+
+            var existe = await context.Equipos.AnyAsync(x => x.id == id);
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            context.Remove(new Equipo() { id = id });
+            await context.SaveChangesAsync();
+            return Ok();
+        }
 
 
 
