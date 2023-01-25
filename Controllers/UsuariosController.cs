@@ -84,9 +84,9 @@ namespace tickets.Controllers
         [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult<List<UsuarioDTO>>> GetUsuarios([FromQuery] PaginacionDTO paginacion)
         {
-            var queryable = context.Solicitudes.AsQueryable();
+            var queryable = context.Users.AsQueryable();
             //var entidadesUsuarios = await context.Users.ToListAsync();
-            var entidadesUsuarios = await queryable.OrderBy(x => x.Usuario).Paginar(paginacion).ToListAsync();
+            var entidadesUsuarios = await queryable.OrderBy(x => x.UserName).Paginar(paginacion).ToListAsync();
             var usuariosDTO = mapper.Map<List<UsuarioDTO>>(entidadesUsuarios);
 
             return Ok(usuariosDTO);

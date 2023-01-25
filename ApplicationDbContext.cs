@@ -17,5 +17,6 @@ namespace tickets
 
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
+        public DbSet<Equipo> Equipos { get; set; }
     }
 }
