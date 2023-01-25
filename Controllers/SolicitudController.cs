@@ -56,14 +56,14 @@ namespace tickets.Controllers
             context.Add(entidadSolicitud);
             await context.SaveChangesAsync();
             //Guarda el primer estado
-            var estado = new NuevoEstadoDTO
+            var estadoDto = new NuevoEstadoDTO
             {
                 EstadoActual = "PENDIENTE",
                 Comentario = "Nada por ahora...",
                 SolicitudId = entidadSolicitud.Id,
                 Fecha = DateTime.Now
             };
-            var entidadEstado = mapper.Map<Estado>(estado);
+            var entidadEstado = mapper.Map<Estado>(estadoDto);
             context.Add(entidadEstado);
             await context.SaveChangesAsync();
             var solicitudDto = mapper.Map<SolicitudDTO>(entidadSolicitud);

@@ -8,7 +8,6 @@ namespace tickets.DTOs
         [Required]
         [StringLength(50)]
         public string Nombre { get; set; }
-        [Required]
         [StringLength(450)]
         public string UsuarioId { get; set; }
         [StringLength(100)]
