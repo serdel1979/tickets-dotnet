@@ -23,6 +23,7 @@ namespace tickets.Entidades
         [Required]
         [StringLength(50)]
         public string EstadoActual { get; set; }
+        public string UrlImagen { get; set; }
         [Required]
         public DateTime Fecha { get; set; }
         public List<Estado> Estados { get; set; }

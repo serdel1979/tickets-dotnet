@@ -10,6 +10,7 @@ namespace tickets.DTOs
         public string Nombre { get; set; }
         [StringLength(450)]
         public string UsuarioId { get; set; }
+        public string UrlImagen { get; set; }
         [StringLength(100)]
         public string Inventario { get; set; }
         [StringLength(100)]

@@ -49,11 +49,13 @@ namespace tickets.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] NuevaSolicitudDTO nuevaSolicitud)
+        public async Task<ActionResult> Post([FromForm] NuevaSolicitudDTO nuevaSolicitud)
         {
+   
             var entidadSolicitud = mapper.Map<Solicitud>(nuevaSolicitud);
             entidadSolicitud.EstadoActual = "PENDIENTE";
             entidadSolicitud.Fecha = DateTime.Now;
+           // entidadSolicitud.UrlImagen = URL;
             context.Add(entidadSolicitud);
             await context.SaveChangesAsync();
             //Guarda el primer estado

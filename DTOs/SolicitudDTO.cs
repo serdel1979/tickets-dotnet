@@ -21,6 +21,7 @@ namespace tickets.DTOs
         [Required]
         [StringLength(250)]
         public string Equipo { get; set; }
+        public string Imagen { get; set; }
         [Required]
         [StringLength(50)]
         public string EstadoActual { get; set; }
