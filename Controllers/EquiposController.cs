@@ -86,13 +86,13 @@ namespace tickets.Controllers
         public async Task<ActionResult> Delete(int id)
         {
 
-            var existe = await context.Equipos.AnyAsync(x => x.id == id);
+            var existe = await context.Equipos.AnyAsync(x => x.Id == id);
             if (!existe)
             {
                 return NotFound();
             }
 
-            context.Remove(new Equipo() { id = id });
+            context.Remove(new Equipo() { Id = id });
             await context.SaveChangesAsync();
             return Ok();
         }

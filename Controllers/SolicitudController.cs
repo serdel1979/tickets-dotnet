@@ -41,6 +41,7 @@ namespace tickets.Controllers
         [HttpGet("{idUser}/missolicitudes")]
         public async Task<ActionResult<List<SolicitudDTO>>> GetMiSolicitudes(string idUser)
         {
+
             var entidadesSolicitud = await context.Solicitudes.Where(x => x.UsuarioId == idUser).
                     OrderByDescending(estado => estado.Fecha).
                     ToListAsync();
@@ -71,6 +72,7 @@ namespace tickets.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult<EstadoDTO>> GetSolicitud(int id)
         {
             var entidadSolicitud = await context.Solicitudes.FirstOrDefaultAsync(solicitud => solicitud.Id == id);
@@ -112,6 +114,7 @@ namespace tickets.Controllers
         //retorna los estados de una solicitud
 
         [HttpGet("{idSolicitud:int}/estados", Name = "ObtenerEstadosDeSolicitud")]
+        [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult<List<EstadoDTO>>> GetEstadosSolicitud(int idSolicitud)
         {
             var entidadSolicitud = await context.Solicitudes.FirstOrDefaultAsync(solicitud => solicitud.Id == idSolicitud);
@@ -152,7 +155,22 @@ namespace tickets.Controllers
         }
 
 
+        [HttpGet("mi/{idSolicitud:int}/{idUser}")] //analizar si el id logueado es el idUsuario de solicitud
+        public async Task<ActionResult<EstadoDTO>> GetMiSolicitud(int idSolicitud, string idUser)
+        {
+            var entidadSolicitud = await context.Solicitudes.FirstOrDefaultAsync(solicitud => solicitud.Id == idSolicitud);
+            if (entidadSolicitud == null)
+            {
+                return NotFound();
+            }
+            if(entidadSolicitud.UsuarioId != idUser)
+            {
+                return StatusCode(403);
+            }
 
- 
+            var solicitudDto = mapper.Map<SolicitudDTO>(entidadSolicitud);
+            return Ok(solicitudDto);
+        }
+
     }
 }
