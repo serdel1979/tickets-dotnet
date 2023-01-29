@@ -115,6 +115,10 @@ namespace tickets.Controllers
 
             return new RespuestaAutenticacion()
             {
+                Id = usuario.Id,
+                UserName = usuario.UserName,
+                Email = usuario.Email,
+                Ok = true,
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 Expiracion = expiracion
             };
