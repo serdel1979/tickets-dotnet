@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using tickets.DTOs;
+using tickets.Entidades;
 using tickets.Utilidades;
 
 namespace tickets.Controllers
@@ -46,9 +47,28 @@ namespace tickets.Controllers
 
 
 
-        [HttpPost("registrar")]
+        [HttpPost("solicitar")]
         [AllowAnonymous]
-        public async Task<ActionResult<RespuestaAutenticacion>> Login(RegistroUsuario credenciales)
+        public async Task<ActionResult<RespuestaAutenticacion>> SolicitaUsuario(RegistroUsuario usuario)
+        {
+            var usuarioBd = new Usuario
+            {
+                habilitado = false,   //usuario deshabilitado
+                UserName = usuario.Usuario,
+                Email = usuario.Email
+            };
+
+            var resultado = await userManager.CreateAsync(usuarioBd, usuario.Password);
+            if (resultado.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest(resultado.Errors);
+        }
+
+        [HttpPost("registrar")]
+        [Authorize(Policy = "EsAdmin")]
+        public async Task<ActionResult<RespuestaAutenticacion>> RegistraUsuario(RegistroUsuario credenciales)
         {
             var usuario = new IdentityUser
             {
@@ -66,11 +86,17 @@ namespace tickets.Controllers
 
 
 
-
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<RespuestaAutenticacion>>Registrar(CredencialesUsuario credenciales)
+        public async Task<ActionResult<RespuestaAutenticacion>>Login(CredencialesUsuario credenciales)
         {
+            var usuario = await userManager.FindByNameAsync(credenciales.Usuario);
+            var usrSolicitud = await context.Usuarios.FirstOrDefaultAsync(usr => usr.Id == usuario.Id);
+            if (usrSolicitud != null && usrSolicitud.habilitado)
+            {
+                return BadRequest("El usuario aún no está habilitado");
+            }
+
             var resultado = await signin.PasswordSignInAsync(credenciales.Usuario, credenciales.Password,
                 isPersistent: false, lockoutOnFailure: false);
             if (resultado.Succeeded)
