@@ -67,13 +67,15 @@ namespace tickets.Controllers
         }
 
         [HttpPost("registrar")]
-        [Authorize(Policy = "EsAdmin")]
+        [AllowAnonymous]
+        //  [Authorize(Policy = "EsAdmin")]
         public async Task<ActionResult<RespuestaAutenticacion>> RegistraUsuario(RegistroUsuario credenciales)
         {
-            var usuario = new IdentityUser
+            var usuario = new Usuario
             {
                 UserName = credenciales.Usuario,
-                Email = credenciales.Email
+                Email = credenciales.Email,
+                habilitado = true
             };
 
             var resultado = await userManager.CreateAsync(usuario, credenciales.Password);
@@ -90,9 +92,8 @@ namespace tickets.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<RespuestaAutenticacion>>Login(CredencialesUsuario credenciales)
         {
-            var usuario = await userManager.FindByNameAsync(credenciales.Usuario);
-            var usrSolicitud = await context.Usuarios.FirstOrDefaultAsync(usr => usr.Id == usuario.Id);
-            if (usrSolicitud != null && usrSolicitud.habilitado)
+            var usrSolicitud = await context.Usuarios.FirstOrDefaultAsync(usr => usr.UserName == credenciales.Usuario);
+            if (usrSolicitud != null && !usrSolicitud.habilitado)
             {
                 return BadRequest("El usuario aún no está habilitado");
             }

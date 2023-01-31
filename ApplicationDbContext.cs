@@ -15,12 +15,13 @@ namespace tickets
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Usuario>().ToTable("Usuarios");
+            builder.Entity<Usuario>().ToTable("AspNetUsers");
         }
 
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+
     }
 }
