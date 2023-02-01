@@ -146,12 +146,14 @@ namespace tickets.Controllers
             var securityToken = new JwtSecurityToken(issuer: null, audience: null, claims: claims,
                 expires: expiracion, signingCredentials: creds);
 
+
             return new RespuestaAutenticacion()
             {
                 Id = usuario.Id,
                 UserName = usuario.UserName,
                 Email = usuario.Email,
                 Ok = true,
+                Claims = claimsDB.Count(),
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 Expiracion = expiracion
             };
