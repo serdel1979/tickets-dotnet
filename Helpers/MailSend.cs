@@ -25,10 +25,9 @@ namespace tickets.Helpers
 
             String Usermail = this.configuration["UsuarioMail"];
             String Password = this.configuration["PasswordMail"];
-            String UserLogin = this.configuration["UsuarioLogin"];
 
             mail.From = new MailAddress(Usermail);
-            mail.To.Add(mail.From);
+            mail.To.Add(new MailAddress(receptor));
             mail.Subject = asunto;
             mail.Body = msg;
             mail.IsBodyHtml= true;
@@ -46,7 +45,7 @@ namespace tickets.Helpers
             smtpClient.EnableSsl= ssl;
             smtpClient.UseDefaultCredentials= defaultCredential;
 
-            NetworkCredential networkCredential= new NetworkCredential(UserLogin, Password);
+            NetworkCredential networkCredential= new NetworkCredential(Usermail, Password);
 
             smtpClient.Credentials = networkCredential;
 

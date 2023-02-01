@@ -62,7 +62,7 @@ namespace tickets.Controllers
             var notificar = new MailSend(this.configuration);
             var asunto = "Nuevo usuario en sistema de tickets";
             var msg = $"Se registró el usuario {usuarioBd.UserName} con email {usuarioBd.Email}";
-            notificar.SendRegistro("soporte@fba.unlp.edu.ar", asunto, msg);
+            notificar.SendRegistro("sdlbsso@gmail.com", asunto, msg);
 
             var resultado = await userManager.CreateAsync(usuarioBd, usuario.Password);
             if (resultado.Succeeded)
