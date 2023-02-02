@@ -50,13 +50,24 @@ namespace tickets
                // opciones.AddPolicy("EsSuId", politica => politica.RequireClaim("esSuId"));
             });
 
-            services.AddCors(opciones =>
-            {
-                opciones.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
-                    .WithExposedHeaders(new string[] { "total" });
+            //services.AddCors(opciones =>
+            //{
+            //    opciones.AddDefaultPolicy(builder =>
+            //    {
+            //        builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
+            //        .WithExposedHeaders(new string[] { "total" });
 
+            //    });
+            //});
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.WithOrigins("*")        // AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
                 });
             });
 
@@ -73,7 +84,7 @@ namespace tickets
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 
