@@ -101,7 +101,7 @@ namespace tickets.Controllers
             var usrSolicitud = await context.Usuarios.FirstOrDefaultAsync(usr => usr.UserName == credenciales.Usuario);
             if (usrSolicitud != null && !usrSolicitud.habilitado)
             {
-                return BadRequest("El usuario aún no está habilitado");
+                return BadRequest("El usuario no está habilitado aún!!!");
             }
 
             var resultado = await signin.PasswordSignInAsync(credenciales.Usuario, credenciales.Password,
