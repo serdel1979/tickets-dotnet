@@ -23,7 +23,7 @@ namespace tickets
         {
 
             services.AddDbContext<ApplicationDbContext>(options=>
-                options.UseSqlServer(Configuration.GetConnectionString("DefoultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefoultConnection")));
             services.AddControllers();
 
 
