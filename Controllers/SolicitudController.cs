@@ -92,7 +92,7 @@ namespace tickets.Controllers
                 var estado = new NuevoEstadoDTO
                 {
                     EstadoActual = "Visto",
-                    Comentario = "Nada por ahora...",
+                    Comentario = "Nada por ahora!!!",
                     SolicitudId = id,
                     Fecha = DateTime.Now
                 };
