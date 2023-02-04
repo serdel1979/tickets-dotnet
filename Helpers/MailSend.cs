@@ -34,7 +34,7 @@ namespace tickets.Helpers
             mail.Priority= MailPriority.Normal;
 
             String smtp = this.configuration["ServerMail"];
-            int port = int.Parse(this.configuration["Port"]);
+            int port = int.Parse(this.configuration["PortMail"]);
             bool ssl = bool.Parse(this.configuration["Ssl"]);
             bool defaultCredential = bool.Parse(this.configuration["DefaultCredential"]);
 
