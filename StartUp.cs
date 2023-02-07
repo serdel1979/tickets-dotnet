@@ -23,7 +23,8 @@ namespace tickets
         {
 
             services.AddDbContext<ApplicationDbContext>(options=>
-                options.UseNpgsql(Configuration.GetConnectionString("DefoultConnection")));
+              //  options.UseNpgsql(Configuration.GetConnectionString("DefoultConnection")));
+              options.UseNpgsql("Host=containers-us-west-65.railway.app;Database=railway,6667;Username=postgres;Password=XYuXggbAtXpl1WZqPGye");
             services.AddControllers();
 
 
